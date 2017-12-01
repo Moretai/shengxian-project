@@ -3,15 +3,17 @@ import {
   View,
   Text,
   Dimensions,
-  Image
+  Image,
+  Alert
 } from 'react-native'
-import Carousel from 'react-native-snap-carousel';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
 
 const { height, width } = Dimensions.get('window')
 export default class HomeHH extends React.Component {
   constructor(props) {
   super(props);
     this.state = {
+        activeSlide: 0,
         viewport: {
             width: Dimensions.get('window').width,
             height: Dimensions.get('window').height
@@ -36,6 +38,7 @@ export default class HomeHH extends React.Component {
     };
 }
     _renderItem ({item, index}) {
+      // this.setState({ now: index })
         return (
             <View>
                 <Image
@@ -44,6 +47,29 @@ export default class HomeHH extends React.Component {
                   resizeMode='cover'
                  />
             </View>
+        );
+    }
+
+    get pagination () {
+        const { entries, activeSlide } = this.state;
+        return (
+            <Pagination
+              dotsLength={entries.length}
+              activeDotIndex={activeSlide}
+              containerStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.75)' }}
+              dotStyle={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: 5,
+                  marginHorizontal: 8,
+                  backgroundColor: 'rgba(255, 255, 255, 0.92)'
+              }}
+              inactiveDotStyle={{
+                  // Define styles for inactive dots here
+              }}
+              inactiveDotOpacity={0.4}
+              inactiveDotScale={0.6}
+            />
         );
     }
 
@@ -68,7 +94,9 @@ export default class HomeHH extends React.Component {
               // sliderWidth={sliderWidth}
               sliderWidth={this.state.viewport.width}
               itemWidth={this.state.viewport.width}
+              onSnapToItem={(index) => this.setState({ activeSlide: index }) }
             />
+          { this.pagination }
         </View>
         );
     }
